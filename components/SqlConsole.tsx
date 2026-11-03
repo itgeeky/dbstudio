@@ -106,7 +106,7 @@ export function SqlConsole() {
         onChange={(e) => setSql(e.target.value)}
         className="h-40 resize-none rounded-xl border border-slate-700 bg-slate-950 p-3 font-mono text-sm outline-none focus:border-sky-400"
       />
-      <div className="flex items-center gap-2">
+      <div className="relative z-20 flex items-center gap-2">
         <button
           onClick={run}
           disabled={loading}
