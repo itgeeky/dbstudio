@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import type { TableInfo } from "@/lib/types";
+import { SqlEditor } from "./SqlEditor";
 
 type Result = {
   columns?: string[];
@@ -42,7 +44,7 @@ function saveRecentQuery(sql: string) {
   }
 }
 
-export function SqlConsole() {
+export function SqlConsole({ tables }: { tables: TableInfo[] }) {
   const [sql, setSql] = useState("select current_schema(), now()");
   const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
@@ -99,7 +101,8 @@ export function SqlConsole() {
   return (
     <div className="flex h-full flex-col gap-3 p-4">
       <p className="text-sm text-slate-400">
-        Consola read-only: solo <code className="text-sky-300">SELECT</code>, máximo 200 filas.
+        Consola read-only: solo <code className="text-sky-300">SELECT</code>, máximo 200 filas. Al
+        escribir se sugieren tablas y columnas.
       </p>
       <textarea
         value={sql}

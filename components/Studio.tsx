@@ -231,7 +231,7 @@ export function Studio() {
                 </div>
               </div>
             )}
-            {tab === "sql" && <SqlConsole />}
+            {tab === "sql" && <SqlConsole tables={graph.tables} />}
           </main>
         </div>
       )}

@@ -8,6 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.20.4",
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-sql": "^6.10.0",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.15",
     "@neondatabase/serverless": "^1.0.1",
     "@xyflow/react": "^12.8.2",
     "next": "^15.5.2",
