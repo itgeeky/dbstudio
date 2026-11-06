@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { SqlEditor } from "./SqlEditor";
 
 type Result = {
   columns?: string[];
@@ -12,6 +13,14 @@ type Result = {
 type RecentQuery = {
   sql: string;
   timestamp: number;
+};
+
+type SchemaInfo = {
+  tables: Array<{
+    schema: string;
+    name: string;
+    columns: Array<{ name: string; dataType: string }>;
+  }>;
 };
 
 const RECENT_QUERIES_KEY = "db-studio-recent-queries";
@@ -43,15 +52,23 @@ function saveRecentQuery(sql: string) {
 }
 
 export function SqlConsole() {
-  const [sql, setSql] = useState("select current_schema(), now()");
+  const [sql, setSql] = useState("SELECT * FROM ");
   const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [recentQueries, setRecentQueries] = useState<RecentQuery[]>([]);
   const [showRecent, setShowRecent] = useState(false);
+  const [schema, setSchema] = useState<SchemaInfo | null>(null);
 
   useEffect(() => {
     setRecentQueries(loadRecentQueries());
+    
+    fetch("/api/schema")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.tables) setSchema(data);
+      })
+      .catch(() => {});
   }, []);
 
   async function run() {
@@ -100,11 +117,14 @@ export function SqlConsole() {
     <div className="flex h-full flex-col gap-3 p-4">
       <p className="text-sm text-slate-400">
         Consola read-only: solo <code className="text-sky-300">SELECT</code>, máximo 200 filas.
+        <span className="ml-2 text-slate-500">Cmd/Ctrl+Enter para ejecutar</span>
       </p>
-      <textarea
+      <SqlEditor
         value={sql}
-        onChange={(e) => setSql(e.target.value)}
-        className="h-40 resize-none rounded-xl border border-slate-700 bg-slate-950 p-3 font-mono text-sm outline-none focus:border-sky-400"
+        onChange={setSql}
+        onExecute={run}
+        schema={schema}
+        className="h-40"
       />
       <div className="flex items-center gap-2">
         <button
